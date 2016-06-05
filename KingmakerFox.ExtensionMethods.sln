@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "KingmakerFox.ExtensionMethods", "KingmakerFox.ExtensionMethods\KingmakerFox.ExtensionMethods.fsproj", "{DBBC506D-7ACE-49DB-967A-A81AEF328AB8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBBC506D-7ACE-49DB-967A-A81AEF328AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBBC506D-7ACE-49DB-967A-A81AEF328AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBBC506D-7ACE-49DB-967A-A81AEF328AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBBC506D-7ACE-49DB-967A-A81AEF328AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

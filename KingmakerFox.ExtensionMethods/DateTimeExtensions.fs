@@ -1,10 +1,9 @@
-﻿namespace Common
-
-module DateTimeExtensions =
+﻿[<AutoOpen>]
+module DateTimeExtensions
 
     open System
     open System.Runtime.CompilerServices
-    open Common.StringFunctions
+    open KingmakerFox.ExtensionMethods.StringFunctions
 
     //You need to declare all Extension Attributes explicitly
     [<assembly:Extension>]
@@ -72,7 +71,7 @@ module DateTimeExtensions =
 
         [<Extension>]
         member this.NextCalendarMonthEndDate =
-            if this.IsCalendarMonthEndDate = true then
+            if this.IsCalendarMonthEndDate then
                 let adjDate = this.AddDays(1.0)
                 if adjDate.Month<>12 then
                     let nextMonth = adjDate.Month+1
@@ -120,9 +119,7 @@ module DateTimeExtensions =
 
         [<Extension>]
         member this.LastCalendarQuarterEndDate =
-            let month = this.Month
-
-            match month with
+            match this.Month with
             | 4 | 5 | 6 -> DateTime.Parse("03/31/"+this.Year.ToString("0000"))
             | 7 | 8 | 9 -> DateTime.Parse("06/30/"+this.Year.ToString("0000"))
             | 10 | 11 | 12 -> DateTime.Parse("09/30/"+this.Year.ToString("0000"))
@@ -161,33 +158,45 @@ module DateTimeExtensions =
 
         [<Extension>]
         member this.RelativeDate(relativePeriod : string) =
-            let rpText = RelativePeriodText(relativePeriod)
-            let rpNumber = RelativePeriodNumber(relativePeriod)
-            let mutable loopDate = this
+            try
+                let rpText = RelativePeriodText(relativePeriod)
+                let rpNumber = RelativePeriodNumber(relativePeriod)
+                let mutable loopDate = this
 
-            match rpText with
-            | "D" ->
-                let calcDate =
-                    if int rpNumber<=0 then
-                        for i in 0 .. -1 .. int rpNumber do
-                            loopDate <- loopDate.LastWeekdayDate
-                        loopDate
-                    elif int rpNumber>2 then
-                        for i in 1 .. 1 .. int rpNumber do
-                            loopDate <- loopDate.NextWeekdayDate
-                        loopDate
-                    elif loopDate.IsWeekday then loopDate
-                    else loopDate.NextWeekdayDate
-                calcDate
-            | "W" -> this.LastBusinessWeekendDate.AddDays(rpNumber*7.0)
-            | "M" -> this.AddMonths(int rpNumber).LastBusinessMonthEndDate
-            | "Q" -> this.AddMonths(int rpNumber * 3).LastBusinessQuarterEndDate
-            | "S" -> this.AddMonths(int rpNumber * 6).LastBusinessSemiannualEndDate
-            | "Y" -> this.AddYears(int rpNumber).LastBusinessYearEndDate
-            | "AD" -> this.AddDays(rpNumber)
-            | "AW" -> this.AddDays(rpNumber*7.0)
-            | "AM" -> this.AddMonths(int rpNumber)
-            | "AQ" -> this.AddMonths(int rpNumber*3)
-            | "AS" -> this.AddMonths(int rpNumber*6)
-            | "AY" -> this.AddYears(int rpNumber)
-            | _ -> this
+                match rpText with
+                | "D" ->
+                    loopDate <-
+                        if loopDate.DayOfWeek = DayOfWeek.Saturday then
+                            loopDate.AddDays(2.0)
+                        elif loopDate.DayOfWeek = DayOfWeek.Sunday then
+                            loopDate.AddDays(1.0)
+                        else
+                            loopDate
+                    
+                    let calcDate =
+                        if int rpNumber<=0 then
+                            for i in 0 .. -1 .. int rpNumber do
+                                loopDate <- loopDate.LastWeekdayDate
+                            Some(loopDate)
+                        elif int rpNumber>=2 then
+                            for i in 2 .. 1 .. int rpNumber do
+                                loopDate <- loopDate.NextWeekdayDate
+                            Some(loopDate)
+                        else
+                            Some(loopDate)
+
+                    calcDate
+                | "W" -> Some(this.LastBusinessWeekendDate.AddDays(rpNumber*7.0))
+                | "M" -> Some(this.AddMonths(int rpNumber).LastBusinessMonthEndDate)
+                | "Q" -> Some(this.AddMonths(int rpNumber * 3).LastBusinessQuarterEndDate)
+                | "S" -> Some(this.AddMonths(int rpNumber * 6).LastBusinessSemiannualEndDate)
+                | "Y" -> Some(this.AddYears(int rpNumber).LastBusinessYearEndDate)
+                | "AD" -> Some(this.AddDays(rpNumber))
+                | "AW" -> Some(this.AddDays(rpNumber*7.0))
+                | "AM" -> Some(this.AddMonths(int rpNumber))
+                | "AQ" -> Some(this.AddMonths(int rpNumber*3))
+                | "AS" -> Some(this.AddMonths(int rpNumber*6))
+                | "AY" -> Some(this.AddYears(int rpNumber))
+                | _ -> None
+            with
+                | invalidOp -> None

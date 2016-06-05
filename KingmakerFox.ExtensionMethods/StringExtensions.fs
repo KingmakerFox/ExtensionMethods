@@ -1,6 +1,5 @@
-﻿namespace Common
-
-module StringExtensions =
+﻿[<AutoOpen>]
+module StringExtensions
 
     open System
     open System.Runtime.CompilerServices

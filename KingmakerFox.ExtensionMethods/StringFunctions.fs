@@ -1,8 +1,6 @@
-﻿namespace Common
+﻿namespace KingmakerFox.ExtensionMethods
 
 module StringFunctions =
-
-    open Common.StringExtensions
 
     let RelativePeriodText(relativePeriod:string) =
         if relativePeriod.Substring(relativePeriod.Length-2,1).IsNumeric=true then

@@ -1,7 +1,6 @@
-﻿namespace CommonTest
+﻿namespace KingmakerFox.ExtensionMethodsTest
 
-open Common.StringExtensions
-open Common.Helpers
+open KingmakerFox.ExtensionMethods.Helpers
 open Xunit
 
 
